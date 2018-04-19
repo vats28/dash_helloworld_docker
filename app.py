@@ -21,23 +21,25 @@ app.layout = html.Div([
     dcc.Dropdown(
         id='my-dropdown',
         options=[
-            {'label': 'Coke', 'value': 'COKE'},
-            {'label': 'Tesla', 'value': 'TSLA'},
-            {'label': 'Apple', 'value': 'AAPL'}
+            {'label': 'Tesla', 'value': 'tsla'},
+            {'label': 'Apple', 'value': 'aapl'},
+            {'label': 'Coke', 'value': 'coke'}
         ],
-        value='COKE'
+        value='tsla'
     ),
     dcc.Graph(id='my-graph')
 ], className="container")
 
-@app.callback(Output('my-graph', 'figure'), [Input('my-dropdown', 'value')])
+@app.callback(Output('my-graph', 'figure'),
+              [Input('my-dropdown', 'value')])
 def update_graph(selected_dropdown_value):
-    df = web.DataReader(
-        selected_dropdown_value, data_source='google',
-        start=dt(2017, 1, 1), end=dt.now())
+    start = dt(2015, 1, 1)
+    end = dt(2018, 1, 1)
+    df = web.DataReader(str(selected_dropdown_value),
+                        data_source='morningstar', start=start, end=end).reset_index()
     return {
         'data': [{
-            'x': df.index,
+            'x': df.Date,
             'y': df.Close,
             'line': {
                 'width': 3,
