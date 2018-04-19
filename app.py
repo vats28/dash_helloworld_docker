@@ -33,10 +33,10 @@ app.layout = html.Div([
 @app.callback(Output('my-graph', 'figure'),
               [Input('my-dropdown', 'value')])
 def update_graph(selected_dropdown_value):
-    start = dt(2015, 1, 1)
-    end = dt(2018, 1, 1)
     df = web.DataReader(str(selected_dropdown_value),
-                        data_source='morningstar', start=start, end=end).reset_index()
+                        data_source='morningstar',
+                        start=dt(2015, 1, 1),
+                        end=dt(2018, 1, 1)).reset_index()
     return {
         'data': [{
             'x': df.Date,
