@@ -2,14 +2,16 @@ import dash
 from dash.dependencies import Input, Output
 import dash_core_components as dcc
 import dash_html_components as html
-from pandas_datareader import data as web
-from datetime import datetime as dt
+
 import flask
+import pandas as pd
 import time
 import os
 
 server = flask.Flask('app')
 server.secret_key = os.environ.get('secret_key', 'secret')
+
+df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/hello-world-stock.csv')
 
 app = dash.Dash('app', server=server)
 
@@ -21,11 +23,11 @@ app.layout = html.Div([
     dcc.Dropdown(
         id='my-dropdown',
         options=[
-            {'label': 'Tesla', 'value': 'tsla'},
-            {'label': 'Apple', 'value': 'aapl'},
-            {'label': 'Coke', 'value': 'coke'}
+            {'label': 'Tesla', 'value': 'TSLA'},
+            {'label': 'Apple', 'value': 'AAPL'},
+            {'label': 'Coke', 'value': 'COKE'}
         ],
-        value='tsla'
+        value='TSLA'
     ),
     dcc.Graph(id='my-graph')
 ], className="container")
@@ -33,14 +35,11 @@ app.layout = html.Div([
 @app.callback(Output('my-graph', 'figure'),
               [Input('my-dropdown', 'value')])
 def update_graph(selected_dropdown_value):
-    df = web.DataReader(str(selected_dropdown_value),
-                        data_source='morningstar',
-                        start=dt(2015, 1, 1),
-                        end=dt(2018, 1, 1)).reset_index()
+    dff = df[df['Stock'] == selected_dropdown_value]
     return {
         'data': [{
-            'x': df.Date,
-            'y': df.Close,
+            'x': dff.Date,
+            'y': dff.Close,
             'line': {
                 'width': 3,
                 'shape': 'spline'
