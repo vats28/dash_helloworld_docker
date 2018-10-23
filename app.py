@@ -55,17 +55,5 @@ def update_graph(selected_dropdown_value):
         }
     }
 
-app.css.append_css({
-    'external_url': (
-	'https://cdn.rawgit.com/plotly/dash-app-stylesheets/96e31642502632e86727652cf0ed65160a57497f/dash-hello-world.css'
-    )
-})
-
-if 'DYNO' in os.environ:
-    app.scripts.append_script({
-        'external_url': 'https://cdn.rawgit.com/chriddyp/ca0d8f02a1659981a0ea7f013a378bbd/raw/e79f3f789517deec58f41251f7dbb6bee72c44ab/plotly_ga.js'
-    })
-
-
 if __name__ == '__main__':
     app.run_server()
